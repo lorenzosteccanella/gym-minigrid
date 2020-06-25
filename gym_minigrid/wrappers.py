@@ -98,6 +98,78 @@ class StateBonus(gym.core.Wrapper):
     def reset(self, **kwargs):
         return self.env.reset(**kwargs)
 
+class KeyDoorTreasureObs(gym.core.Wrapper):
+    """
+    return (x,y) as observation
+    """
+
+    def __init__(self, env):
+        super().__init__(env)
+        self.key = 0
+        self.door = 0
+
+    def step(self, action):
+        obs, reward, done, info = self.env.step(action)
+
+        env = self.unwrapped
+        x,y = tuple(env.agent_pos)
+        dir = env.agent_dir
+
+        if env.carrying is not None and self.key == 0:
+            self.key = 1
+            reward += 1
+
+        if self.door == 0:
+            # Get the position in front of the agent
+            fwd_pos = env.front_pos
+
+            # Get the contents of the cell in front of the agent
+            fwd_cell = env.grid.get(*fwd_pos)
+
+            if fwd_cell:
+                if hasattr(fwd_cell, "is_open"):
+                    if fwd_cell.is_open is True:
+                        self.door = 1
+                        reward += 1
+
+        inventory = (self.key + self.door)
+
+        pos_dir_inv = (x, y, dir, inventory)
+
+        return pos_dir_inv, reward, done, info
+
+    def reset(self, **kwargs):
+        self.key = 0
+        self.door = 0
+        obs = self.env.reset(**kwargs)
+
+        env = self.unwrapped
+        x, y = tuple(env.agent_pos)
+        dir = env.agent_dir
+
+        if env.carrying is not None and self.key == 0:
+            self.key = 1
+            reward += 1
+
+        if self.door == 0:
+            # Get the position in front of the agent
+            fwd_pos = env.front_pos
+
+            # Get the contents of the cell in front of the agent
+            fwd_cell = env.grid.get(*fwd_pos)
+
+            if fwd_cell:
+                if hasattr(fwd_cell, "is_open"):
+                    if fwd_cell.is_open is True:
+                        self.door = 1
+                        reward += 1
+
+        inventory = (self.key + self.door)
+
+        pos_dir_inv = (x, y, dir, inventory)
+
+        return pos_dir_inv
+
 class ImgObsWrapper(gym.core.ObservationWrapper):
     """
     Use the image as the only observation output, no language/mission.

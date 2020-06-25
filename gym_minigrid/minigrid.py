@@ -232,7 +232,7 @@ class Door(WorldObj):
                 return True
             return False
 
-        self.is_open = not self.is_open
+        #self.is_open = not self.is_open
         return True
 
     def encode(self):
@@ -821,7 +821,7 @@ class MiniGridEnv(gym.Env):
         Compute the reward to be given upon success
         """
 
-        return 1 - 0.9 * (self.step_count / self.max_steps)
+        return 1# - 0.9 * (self.step_count / self.max_steps)
 
     def _rand_int(self, low, high):
         """
@@ -955,6 +955,17 @@ class MiniGridEnv(gym.Env):
         self.grid.set(i, j, obj)
         obj.init_pos = (i, j)
         obj.cur_pos = (i, j)
+
+    def put_agent(self, i, j, dir):
+        """
+        Set the agent's starting point
+        """
+        self.agent_pos = None
+        self.grid.set(i, j, None)
+        self.agent_pos = (i, j)
+        self.agent_dir = dir
+
+        return (i, j)
 
     def place_agent(
         self,
@@ -1138,10 +1149,11 @@ class MiniGridEnv(gym.Env):
 
         # Drop an object
         elif action == self.actions.drop:
-            if not fwd_cell and self.carrying:
-                self.grid.set(*fwd_pos, self.carrying)
-                self.carrying.cur_pos = fwd_pos
-                self.carrying = None
+            pass
+            #if not fwd_cell and self.carrying:
+            #    self.grid.set(*fwd_pos, self.carrying)
+            #    self.carrying.cur_pos = fwd_pos
+            #    self.carrying = None
 
         # Toggle/activate an object
         elif action == self.actions.toggle:
