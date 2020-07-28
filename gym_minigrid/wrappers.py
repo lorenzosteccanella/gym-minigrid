@@ -114,7 +114,7 @@ class PositionObs(gym.core.Wrapper):
 
         pos_dir = (x, y, dir)
 
-        return pos_dir_inv, reward, done, info
+        return pos_dir, reward, done, info
 
     def reset(self, **kwargs):
         obs = self.env.reset(**kwargs)
