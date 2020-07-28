@@ -97,6 +97,7 @@ class StateBonus(gym.core.Wrapper):
 
     def reset(self, **kwargs):
         return self.env.reset(**kwargs)
+
 class PositionObs(gym.core.Wrapper):
     """
     return (x, y, dir) as observation
@@ -122,7 +123,7 @@ class PositionObs(gym.core.Wrapper):
         x, y = tuple(env.agent_pos)
         dir = env.agent_dir
 
-        pos_dir_inv = (x, y, dir)
+        pos_dir = (x, y, dir)
 
         return pos_dir
     
