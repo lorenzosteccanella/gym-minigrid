@@ -98,6 +98,47 @@ class StateBonus(gym.core.Wrapper):
     def reset(self, **kwargs):
         return self.env.reset(**kwargs)
 
+class NESWActions(gym.core.Wrapper):
+    """
+    we change the actions to be 0:N, 1:E, 2:S, 3:W
+    """
+
+    def __init__(self, env):
+        super().__init__(env)
+
+    def step(self, action):
+        if action == 0:
+            dir = self.unwrapped.agent_dir
+            while dir != 3: # set the correct direction
+                self.env.step(0)
+                dir = self.unwrapped.agent_dir
+
+        elif action == 1:
+            dir = self.unwrapped.agent_dir
+            while dir != 0: # set the correct direction
+                self.env.step(0)
+                dir = self.unwrapped.agent_dir
+
+        elif action == 2:
+            dir = self.unwrapped.agent_dir
+            while dir != 1: # set the correct direction
+                self.env.step(0)
+                dir = self.unwrapped.agent_dir
+
+        elif action == 3:
+            dir = self.unwrapped.agent_dir
+            while dir != 2: # set the correct direction
+                self.env.step(0)
+                dir = self.unwrapped.agent_dir v
+
+        obs, reward, done, info = self.env.step(2) # move forward
+        x, y = tuple(self.unwrapped.agent_pos)
+        dir = self.unwrapped.agent_dir
+
+        pos_dir = (x, y, dir)
+
+        return pos_dir, reward, done, info
+
 from .minigrid import Goal
 class PositionObs(gym.core.Wrapper):
     """
