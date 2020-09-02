@@ -139,6 +139,47 @@ class NESWActions(gym.core.Wrapper):
 
         return pos_dir, reward, done, info
 
+
+from .minigrid import Goal
+
+
+class PositionOnlyObs(gym.core.Wrapper):
+    """
+    return (x, y) as observation
+    """
+
+    def __init__(self, env):
+        super().__init__(env)
+        self.goal_position = None
+
+    def step(self, action):
+        obs, reward, done, info = self.env.step(action)
+        env = self.unwrapped
+        x, y = tuple(env.agent_pos)
+
+        pos = (x, y)
+
+        return pos, reward, done, info
+
+    def reset(self, **kwargs):
+        obs = self.env.reset(**kwargs)
+
+        if not self.goal_position:
+            self.goal_position = [x for x, y in enumerate(self.grid.grid) if isinstance(y, (Goal))]
+            if len(
+                    self.goal_position) >= 1:  # in case there are multiple goals , needs to be handled for other env types
+                self.goal_position = (int(self.goal_position[0] / self.height), self.goal_position[0] % self.width)
+
+        env = self.unwrapped
+        x, y = tuple(env.agent_pos)
+
+        pos_dir = (x, y)
+
+        return pos
+
+    def get_goal_position(self):
+        return self.goal_position
+
 from .minigrid import Goal
 class PositionObs(gym.core.Wrapper):
     """
