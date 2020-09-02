@@ -173,7 +173,7 @@ class PositionOnlyObs(gym.core.Wrapper):
         env = self.unwrapped
         x, y = tuple(env.agent_pos)
 
-        pos_dir = (x, y)
+        pos = (x, y)
 
         return pos
 
