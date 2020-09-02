@@ -129,7 +129,7 @@ class NESWActions(gym.core.Wrapper):
             dir = self.unwrapped.agent_dir
             while dir != 2: # set the correct direction
                 self.env.step(0)
-                dir = self.unwrapped.agent_dir v
+                dir = self.unwrapped.agent_dir
 
         obs, reward, done, info = self.env.step(2) # move forward
         x, y = tuple(self.unwrapped.agent_pos)
