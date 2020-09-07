@@ -105,6 +105,7 @@ class NESWActions(gym.core.Wrapper):
 
     def __init__(self, env):
         super().__init__(env)
+        self.action_space = spaces.Discrete(4)
 
     def step(self, action):
         if action == 0:
@@ -138,6 +139,10 @@ class NESWActions(gym.core.Wrapper):
         pos_dir = (x, y, dir)
 
         return pos_dir, reward, done, info
+    
+    
+    def get_goal_position(self):
+        return self.goal_position
 
 
 from .minigrid import Goal
