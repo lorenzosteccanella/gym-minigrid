@@ -7,100 +7,6 @@ import gym
 from gym import error, spaces, utils
 from .minigrid import OBJECT_TO_IDX, COLOR_TO_IDX, STATE_TO_IDX
 
-
-class ColRowTrajectory(gym.core.Wrapper):
-    """
-    we change the actions to be 0:N, 1:E, 2:S, 3:W
-    """
-
-    def __init__(self, env):
-        super().__init__(env)
-        self.Trajectories = [((1, 1) , 2 , 0 , (1, 2) , False , {}) , ((1, 2) , 2 , 0 , (1, 3) , False , {}) ,
-                        ((1, 3) , 2 , 0 , (1, 4) , False , {}) , ((1, 4) , 2 , 0 , (1, 5) , False , {}) ,
-                        ((1, 5) , 2 , 0 , (1, 6) , False , {}) , ((1, 6) , 2 , 0 , (1, 6) , False , {}) ,
-                        ((2, 1) , 2 , 0 , (2, 2) , False , {}) , ((2, 2) , 2 , 0 , (2, 3) , False , {}) ,
-                        ((2, 3) , 2 , 0 , (2, 4) , False , {}) , ((2, 4) , 2 , 0 , (2, 5) , False , {}) ,
-                        ((2, 5) , 2 , 0 , (2, 6) , False , {}) , ((2, 6) , 2 , 0 , (2, 6) , False , {}) ,
-                        ((3, 1) , 2 , 0 , (3, 2) , False , {}) , ((3, 2) , 2 , 0 , (3, 3) , False , {}) ,
-                        ((3, 3) , 2 , 0 , (3, 4) , False , {}) , ((3, 4) , 2 , 0 , (3, 5) , False , {}) ,
-                        ((3, 5) , 2 , 0 , (3, 6) , False , {}) , ((3, 6) , 2 , 0 , (3, 6) , False , {}) ,
-                        ((4, 1) , 2 , 0 , (4, 2) , False , {}) , ((4, 2) , 2 , 0 , (4, 3) , False , {}) ,
-                        ((4, 3) , 2 , 0 , (4, 4) , False , {}) , ((4, 4) , 2 , 0 , (4, 5) , False , {}) ,
-                        ((4, 5) , 2 , 0 , (4, 6) , False , {}) , ((4, 6) , 2 , 0 , (4, 6) , False , {}) ,
-                        ((5, 1) , 2 , 0 , (5, 2) , False , {}) , ((5, 2) , 2 , 0 , (5, 3) , False , {}) ,
-                        ((5, 3) , 2 , 0 , (5, 4) , False , {}) , ((5, 4) , 2 , 0 , (5, 5) , False , {}) ,
-                        ((5, 5) , 2 , 0 , (5, 6) , False , {}) , ((5, 6) , 2 , 0 , (5, 6) , False , {}) ,
-                        ((6, 1) , 2 , 0 , (6, 2) , False , {}) , ((6, 2) , 2 , 0 , (6, 3) , False , {}) ,
-                        ((6, 3) , 2 , 0 , (6, 4) , False , {}) , ((6, 4) , 2 , 0 , (6, 5) , False , {}) ,
-                        ((6, 5) , 2 , 1 , (6, 6) , True , {}) , ((1, 1) , 1 , 0 , (2, 1) , False , {}) ,
-                        ((2, 1) , 1 , 0 , (3, 1) , False , {}) , ((3, 1) , 1 , 0 , (4, 1) , False , {}) ,
-                        ((4, 1) , 1 , 0 , (5, 1) , False , {}) , ((5, 1) , 1 , 0 , (6, 1) , False , {}) ,
-                        ((6, 1) , 1 , 0 , (6, 1) , False , {}) , ((1, 2) , 1 , 0 , (2, 2) , False , {}) ,
-                        ((2, 2) , 1 , 0 , (3, 2) , False , {}) , ((3, 2) , 1 , 0 , (4, 2) , False , {}) ,
-                        ((4, 2) , 1 , 0 , (5, 2) , False , {}) , ((5, 2) , 1 , 0 , (6, 2) , False , {}) ,
-                        ((6, 2) , 1 , 0 , (6, 2) , False , {}) , ((1, 3) , 1 , 0 , (2, 3) , False , {}) ,
-                        ((2, 3) , 1 , 0 , (3, 3) , False , {}) , ((3, 3) , 1 , 0 , (4, 3) , False , {}) ,
-                        ((4, 3) , 1 , 0 , (5, 3) , False , {}) , ((5, 3) , 1 , 0 , (6, 3) , False , {}) ,
-                        ((6, 3) , 1 , 0 , (6, 3) , False , {}) , ((1, 4) , 1 , 0 , (2, 4) , False , {}) ,
-                        ((2, 4) , 1 , 0 , (3, 4) , False , {}) , ((3, 4) , 1 , 0 , (4, 4) , False , {}) ,
-                        ((4, 4) , 1 , 0 , (5, 4) , False , {}) , ((5, 4) , 1 , 0 , (6, 4) , False , {}) ,
-                        ((6, 4) , 1 , 0 , (6, 4) , False , {}) , ((1, 5) , 1 , 0 , (2, 5) , False , {}) ,
-                        ((2, 5) , 1 , 0 , (3, 5) , False , {}) , ((3, 5) , 1 , 0 , (4, 5) , False , {}) ,
-                        ((4, 5) , 1 , 0 , (5, 5) , False , {}) , ((5, 5) , 1 , 0 , (6, 5) , False , {}) ,
-                        ((6, 5) , 1 , 0 , (6, 5) , False , {}) , ((1, 6) , 1 , 0 , (2, 6) , False , {}) ,
-                        ((2, 6) , 1 , 0 , (3, 6) , False , {}) , ((3, 6) , 1 , 0 , (4, 6) , False , {}) ,
-                        ((4, 6) , 1 , 0 , (5, 6) , False , {}) , ((5, 6) , 1 , 1 , (6, 6) , True , {}) ,
-                        ((6, 1) , 3 , 0 , (5, 1) , False , {}) , ((5, 1) , 3 , 0 , (4, 1) , False , {}) ,
-                        ((4, 1) , 3 , 0 , (3, 1) , False , {}) , ((3, 1) , 3 , 0 , (2, 1) , False , {}) ,
-                        ((2, 1) , 3 , 0 , (1, 1) , False , {}) , ((1, 1) , 3 , 0 , (1, 1) , False , {}) ,
-                        ((6, 2) , 3 , 0 , (5, 2) , False , {}) , ((5, 2) , 3 , 0 , (4, 2) , False , {}) ,
-                        ((4, 2) , 3 , 0 , (3, 2) , False , {}) , ((3, 2) , 3 , 0 , (2, 2) , False , {}) ,
-                        ((2, 2) , 3 , 0 , (1, 2) , False , {}) , ((1, 2) , 3 , 0 , (1, 2) , False , {}) ,
-                        ((6, 3) , 3 , 0 , (5, 3) , False , {}) , ((5, 3) , 3 , 0 , (4, 3) , False , {}) ,
-                        ((4, 3) , 3 , 0 , (3, 3) , False , {}) , ((3, 3) , 3 , 0 , (2, 3) , False , {}) ,
-                        ((2, 3) , 3 , 0 , (1, 3) , False , {}) , ((1, 3) , 3 , 0 , (1, 3) , False , {}) ,
-                        ((6, 4) , 3 , 0 , (5, 4) , False , {}) , ((5, 4) , 3 , 0 , (4, 4) , False , {}) ,
-                        ((4, 4) , 3 , 0 , (3, 4) , False , {}) , ((3, 4) , 3 , 0 , (2, 4) , False , {}) ,
-                        ((2, 4) , 3 , 0 , (1, 4) , False , {}) , ((1, 4) , 3 , 0 , (1, 4) , False , {}) ,
-                        ((6, 5) , 3 , 0 , (5, 5) , False , {}) , ((5, 5) , 3 , 0 , (4, 5) , False , {}) ,
-                        ((4, 5) , 3 , 0 , (3, 5) , False , {}) , ((3, 5) , 3 , 0 , (2, 5) , False , {}) ,
-                        ((2, 5) , 3 , 0 , (1, 5) , False , {}) , ((1, 5) , 3 , 0 , (1, 5) , False , {}) ,
-                        ((5, 6) , 0 , 0 , (5, 5) , False , {}) , ((5, 5) , 0 , 0 , (5, 4) , False , {}) ,
-                        ((5, 4) , 0 , 0 , (5, 3) , False , {}) , ((5, 3) , 0 , 0 , (5, 2) , False , {}) ,
-                        ((5, 2) , 0 , 0 , (5, 1) , False , {}) , ((5, 1) , 0 , 0 , (5, 1) , False , {}) ,
-                        ((4, 6) , 0 , 0 , (4, 5) , False , {}) , ((4, 5) , 0 , 0 , (4, 4) , False , {}) ,
-                        ((4, 4) , 0 , 0 , (4, 3) , False , {}) , ((4, 3) , 0 , 0 , (4, 2) , False , {}) ,
-                        ((4, 2) , 0 , 0 , (4, 1) , False , {}) , ((4, 1) , 0 , 0 , (4, 1) , False , {}) ,
-                        ((3, 6) , 0 , 0 , (3, 5) , False , {}) , ((3, 5) , 0 , 0 , (3, 4) , False , {}) ,
-                        ((3, 4) , 0 , 0 , (3, 3) , False , {}) , ((3, 3) , 0 , 0 , (3, 2) , False , {}) ,
-                        ((3, 2) , 0 , 0 , (3, 1) , False , {}) , ((3, 1) , 0 , 0 , (3, 1) , False , {}) ,
-                        ((2, 6) , 0 , 0 , (2, 5) , False , {}) , ((2, 5) , 0 , 0 , (2, 4) , False , {}) ,
-                        ((2, 4) , 0 , 0 , (2, 3) , False , {}) , ((2, 3) , 0 , 0 , (2, 2) , False , {}) ,
-                        ((2, 2) , 0 , 0 , (2, 1) , False , {}) , ((2, 1) , 0 , 0 , (2, 1) , False , {}) ,
-                        ((1, 6) , 0 , 0 , (1, 5) , False , {}) , ((1, 5) , 0 , 0 , (1, 4) , False , {}) ,
-                        ((1, 4) , 0 , 0 , (1, 3) , False , {}) , ((1, 3) , 0 , 0 , (1, 2) , False , {}) ,
-                        ((1, 2) , 0 , 0 , (1, 1) , False , {}) , ((1, 1) , 0 , 0 , (1, 1) , False , {})]
-
-        self.current_index = 0
-
-    def reset(self, **kwargs):
-        self.env.reset(**kwargs)
-
-        s = self.Trajectories[self.current_index][0]
-
-        return s
-
-    def step(self, action):
-
-        s, a, r, s_t_1, done, info = self.Trajectories[self.current_index]
-
-        self.current_index += 1
-
-        if self.current_index > len(self.Trajectories):
-            self.current_index = 0
-
-        return s_t_1, r, done, info
-
 class ReseedWrapper(gym.core.Wrapper):
     """
     Wrapper to always regenerate an environment with the same set of seeds.
@@ -199,7 +105,8 @@ class NESWActions(gym.core.Wrapper):
 
     def __init__(self, env):
         super().__init__(env)
-        self.action_space = spaces.Discrete(4)
+        self.observation_space = gym.spaces.Discrete(2)
+        self.action_space = gym.spaces.Discrete(4)
 
     def step(self, action):
         if action == 0:
@@ -237,6 +144,31 @@ class NESWActions(gym.core.Wrapper):
     
     def get_goal_position(self):
         return self.goal_position
+
+
+class L1distanceReward(gym.core.Wrapper):
+    """
+    L1 distance wrapper working only with position observation, minigrid where goal is in position (6,6)
+    """
+
+    def __init__(self, env):
+        super().__init__(env)
+        self.action_space = spaces.Discrete(4)
+
+    def step(self, action):
+
+        obs, reward, done, info = self.env.step(2) # move forward
+        x, y = tuple(self.unwrapped.agent_pos)
+        dir = self.unwrapped.agent_dir
+
+        pos_dir = (x, y, dir)
+
+        return pos_dir, reward, done, info
+    
+    
+    def get_goal_position(self):
+        return self.goal_position
+
 
 
 from .minigrid import Goal
